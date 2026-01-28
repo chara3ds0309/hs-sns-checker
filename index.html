@@ -36,7 +36,7 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const gasUrl = "https://script.google.com/macros/s/AKfycbwqjemdpNG2z_gpT7Jh6ej13DLDkUoO41sHnoIy9wDKY9J40vI9BtCETyLjVsJj3ZHefg/exec";
+        const gasUrl = "https://script.google.com/macros/s/AKfycbwiLoCZlfp9xvifz0n9FN13MQsjMXzv-t2LkEL_-MSvE__EKyHL4UBBIaJCFutE_dbSzA/exec";
 
         fetch(`${gasUrl}?ytId=${params.get('yt')}&igId=${params.get('ig')}&tkId=${params.get('tk')}`)
             .then(res => res.json())
