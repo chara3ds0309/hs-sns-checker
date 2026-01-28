@@ -2,38 +2,44 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNS Stats</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-wrap: wrap; gap: 10px; background: transparent; }
-        .card { border-radius: 12px; padding: 15px; min-width: 120px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .yt { background: #FF0000; } /* YouTubeカラー */
-        .x { background: #000000; }  /* Xカラー */
-        .ig { background: #E1306C; } /* Instagramカラー */
-        .count { font-size: 24px; font-weight: bold; display: block; margin-top: 5px; }
-        .label { font-size: 12px; opacity: 0.8; }
+        body { font-family: sans-serif; margin: 0; background: transparent; display: flex; gap: 10px; }
+        .card { 
+            background: white; border-radius: 12px; padding: 10px 20px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;
+        }
+        .label { font-size: 12px; color: #666; font-weight: bold; }
+        .count { font-size: 20px; font-weight: bold; color: #333; margin-top: 4px; }
+        .yt { border-top: 4px solid #FF0000; } /* YouTubeカラーの線 */
     </style>
 </head>
 <body>
     <div class="card yt">
         <span class="label">YouTube</span>
-        <span id="yt-count" class="count">...</span>
-    </div>
-    <div class="card x">
-        <span class="label">X</span>
-        <span id="x-count" class="count">...</span>
+        <span id="yt-count" class="count">読み込み中...</span>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
+        const ytId = params.get('yt');
+        // ↓ここにあなたのGASのURLを正確に貼り付けてください
         const gasUrl = "https://script.google.com/macros/s/AKfycbyXU9-doyIwkZGILpghidVWZFXiFKTEBig9U_gK7m7iCBA8gt-aq-HY-olDwYgkrMvaAw/exec";
 
-        // GASからデータを取得
-        fetch(`${gasUrl}?ytId=${params.get('yt')}&xId=${params.get('x')}`)
-            .then(res => res.json())
-            .then(data => {
-                if(data.youtube) document.getElementById('yt-count').innerText = data.youtube;
-                if(data.x) document.getElementById('x-count').innerText = data.x;
-            })
-            .catch(err => console.error("Error:", err));
+        if (ytId) {
+            fetch(`${gasUrl}?ytId=${ytId}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('yt-count').innerText = 
+                        data.youtube ? Number(data.youtube).toLocaleString() + "人" : "取得失敗";
+                })
+                .catch(err => {
+                    document.getElementById('yt-count').innerText = "Error";
+                });
+        } else {
+            document.getElementById('yt-count').innerText = "ID未指定";
+        }
     </script>
 </body>
 </html>
