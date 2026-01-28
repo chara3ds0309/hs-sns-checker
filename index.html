@@ -2,50 +2,116 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; margin: 0; background: transparent; display: flex; gap: 15px; justify-content: center; }
-        .card { 
-            background: white; border-radius: 15px; padding: 15px; width: 100px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;
+        /* 全体の背景と余白の設定 */
+        body { 
+            margin: 0; 
+            padding: 10px; 
+            background: transparent; 
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: flex-start;
         }
-        .icon { width: 40px; height: 40px; margin-bottom: 8px; border-radius: 50%; }
-        .count { font-size: 16px; font-weight: bold; color: #333; }
-        .label { font-size: 10px; color: #999; text-transform: uppercase; }
-        /* 各ブランドカラーの線 */
-        .yt { border-bottom: 4px solid #FF0000; }
-        .ig { border-bottom: 4px solid #E1306C; }
-        .tk { border-bottom: 4px solid #010101; }
+
+        /* 外側の白い角丸コンテナ */
+        .container {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 20px;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* 各SNSの行 */
+        .sns-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* アイコンのスタイル */
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* テキスト部分のレイアウト */
+        .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .count {
+            font-size: 24px;
+            font-weight: 800;
+            color: #000;
+            line-height: 1.2;
+        }
+
+        .unit {
+            font-size: 16px;
+            font-weight: normal;
+            margin-left: 2px;
+        }
     </style>
 </head>
 <body>
-    <div class="card yt">
-        <img class="icon" src="https://www.google.com/s2/favicons?sz=64&domain=youtube.com">
-        <span id="yt-count" class="count">-</span>
-        <span class="label">YouTube</span>
-    </div>
-    <div class="card ig">
-        <img class="icon" src="https://www.google.com/s2/favicons?sz=64&domain=instagram.com">
-        <span id="ig-count" class="count">-</span>
-        <span class="label">Instagram</span>
-    </div>
-    <div class="card tk" style="opacity: 0.7;">
-        <img class="icon" src="https://www.google.com/s2/favicons?sz=64&domain=tiktok.com">
-        <span class="count" style="font-size: 14px;">設定中</span>
-        <span class="label">TikTok</span>
+    <div class="container">
+        <div class="sns-row">
+            <img class="icon" src="https://www.google.com/s2/favicons?sz=128&domain=youtube.com">
+            <div class="info">
+                <span class="label">YouTube</span>
+                <span id="yt-count" class="count">-<span class="unit">人</span></span>
+            </div>
+        </div>
+
+        <div class="sns-row">
+            <img class="icon" src="https://www.google.com/s2/favicons?sz=128&domain=instagram.com">
+            <div class="info">
+                <span class="label">Instagram</span>
+                <span id="ig-count" class="count">-<span class="unit">人</span></span>
+            </div>
+        </div>
+
+        <div class="sns-row">
+            <img class="icon" src="https://www.google.com/s2/favicons?sz=128&domain=tiktok.com">
+            <div class="info">
+                <span class="label">TikTok</span>
+                <span class="count">準備中</span>
+            </div>
+        </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const gasUrl = "https://script.google.com/macros/s/AKfycbwfeYewzIU9Y195_PYzgHrShq6pyCOrzodg9uB5Twd6waF0eBWZtfSHcLKKoinvboOt/exec";
 
-        fetch(`${gasUrl}?ytId=${params.get('yt')}&igId=${params.get('ig')}&tkId=${params.get('tk')}`)
-            .then(res => res.json())
-            .then(data => {
-                const format = (num) => isNaN(num) ? num : Number(num).toLocaleString();
-                document.getElementById('yt-count').innerText = format(data.youtube);
-                document.getElementById('ig-count').innerText = format(data.instagram);
-                document.getElementById('tk-count').innerText = format(data.tiktok);
-            });
+        if (params.get('yt') || params.get('ig')) {
+            fetch(`${gasUrl}?ytId=${params.get('yt')}&igId=${params.get('ig')}`)
+                .then(res => res.json())
+                .then(data => {
+                    const format = (num) => num && !isNaN(num) ? Number(num).toLocaleString() : "-";
+                    document.getElementById('yt-count').innerHTML = `${format(data.youtube)}<span class="unit">人</span>`;
+                    document.getElementById('ig-count').innerHTML = `${format(data.instagram)}<span class="unit">人</span>`;
+                })
+                .catch(() => {
+                    document.getElementById('yt-count').innerText = "Error";
+                    document.getElementById('ig-count').innerText = "Error";
+                });
+        }
     </script>
 </body>
 </html>
