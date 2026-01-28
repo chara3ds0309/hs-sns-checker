@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; display: flex; flex-wrap: wrap; gap: 10px; background: transparent; }
+        .card { border-radius: 12px; padding: 15px; min-width: 120px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .yt { background: #FF0000; } /* YouTubeカラー */
+        .x { background: #000000; }  /* Xカラー */
+        .ig { background: #E1306C; } /* Instagramカラー */
+        .count { font-size: 24px; font-weight: bold; display: block; margin-top: 5px; }
+        .label { font-size: 12px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="card yt">
+        <span class="label">YouTube</span>
+        <span id="yt-count" class="count">...</span>
+    </div>
+    <div class="card x">
+        <span class="label">X</span>
+        <span id="x-count" class="count">...</span>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const gasUrl = "★ここにあなたのGASのウェブアプリURLを貼る★";
+
+        // GASからデータを取得
+        fetch(`${gasUrl}?ytId=${params.get('yt')}&xId=${params.get('x')}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.youtube) document.getElementById('yt-count').innerText = data.youtube;
+                if(data.x) document.getElementById('x-count').innerText = data.x;
+            })
+            .catch(err => console.error("Error:", err));
+    </script>
+</body>
+</html>
