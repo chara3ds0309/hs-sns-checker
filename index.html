@@ -114,7 +114,7 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         // 保存済みのGAS URLを使用
-        const gasUrl = "https://script.google.com/macros/s/AKfycbzKJkta6WT0L8sejKs8iLzkZSTNA4Ya-oAv0OXiT6ScQtIg28yBiejrj3OrbrO9UJdyOA/exec";
+        const gasUrl = "https://script.google.com/macros/s/AKfycbyJ6xKmSPn0v8t4mMrPy_MUuCPV6QiDYY0xsb5zJSWPOv-sgSl_vdqQpP_WSp7CaEnEKQ/exec";
 
         if (params.get('yt') || params.get('ig')) {
             fetch(`${gasUrl}?ytId=${params.get('yt')}&igId=${params.get('ig')}`)
